@@ -1,0 +1,8 @@
+body {
+  font-family: 'Century Gothic', Avenir, 'Franklin Gothic', Futura, system-ui, -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, sans-serif;
+}
+
+#timeline {
+  min-width: 100vw;
+  min-height: 100vh;
+}
