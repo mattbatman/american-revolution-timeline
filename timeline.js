@@ -1,6 +1,6 @@
 import * as d3 from 'd3';
-import eventData from './event-data';
-import lockdownData from './lockdown-data';
+import rawEventData from './event-data';
+import timespanData from './timespan-data';
 
 function timeline() {
   const selector = '#timeline';
@@ -53,6 +53,13 @@ function timeline() {
   const labelFadedColor = '#E4DDEE';
   const labelPersonalColor = '#093B72';
   const annotationPersonalColor = '#CADFF7';
+
+  const timeParser = d3.timeParse("%d %b %Y %I:%M%p");
+
+  const eventData = rawEventData.map(d => ({
+    ...d,
+    date: parseTime(d.date)
+  }));
 
   function draw() {
     const containerWidth = parseInt(d3.select(selector).style('width'));
@@ -145,7 +152,7 @@ function timeline() {
       .append('g')
       .attr('class', 'annotations')
       .selectAll('g')
-      .data(lockdownData)
+      .data(timespanData)
       .join('g');
 
     annotations
@@ -383,10 +390,15 @@ function timeline() {
 
     return positions;
   } // end dodge fn
+  
+  function parseTime(date) {
+    // adjusting to 6AM instead of midnight aligns first of month circles with axis tick markers
+    return timeParser(`${date} 06:00AM`)
+  }
 
   return {
     draw
-  };
+  }; 
 }
 
 export { timeline };

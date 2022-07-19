@@ -1,26 +1,22 @@
-import * as d3 from 'd3';
-
-const timeParser = d3.timeParse("%d %b %Y %I:%M%p"); 
-
 const data = [
-		{
-		date: timeParser('4 Jul 1775' + ' 06:00AM'),
-		eventName: "THE START",
-		eventDescription: "The fire in Mogo cut all communication in the regi… heard nothing from my family there for 25 hours.",
+	{
+		date: '18 Apr 1775',
+		eventName: "Paul Revere's Midnight Ride",
+		eventDescription: "Paul Revere rode to Lexington, MA, to warn of imminent British invasion.",
 		sharedOrPersonal: "Shared"
 	},
 	{
-		date: timeParser('4 Jul 1776' + ' 06:00AM'),
-		eventName: "Bushfires over New Years",
-		eventDescription: "The fire in Mogo cut all communication in the regi… heard nothing from my family there for 25 hours.",
+		date: '4 Jul 1776',
+		eventName: "Declaration of Independence",
+		eventDescription: "The declaration of independence was signed.",
 		sharedOrPersonal: "Shared"
 	},
-		{
-		date: timeParser('4 Jul 1783' + ' 06:00AM'),
-		eventName: "THE END",
-		eventDescription: "My second event",
-		sharedOrPersonal: "Personal"
+	{
+		date: '3 Sep 1783',
+		eventName: "Treaty of Paris",
+		eventDescription: "The Treaty of Paris was signed",
+		sharedOrPersonal: "Shared"
 	},
-];
+]
 
 export default data;
