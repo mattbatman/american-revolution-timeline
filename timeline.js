@@ -246,8 +246,7 @@ function timeline() {
       .attr('x', width);
 
     const tooltip = d3
-      .create('div')
-      .attr('class', 'tooltip')
+      .select('.tooltip')
       .attr('aria-hidden', 'true').html(`
       <div class="tooltip-date">
         <span id="date"></span>
@@ -319,7 +318,7 @@ function timeline() {
           'transform',
           `translate(${
             width >= spacingConfig.smallScreenSize ? plotArea.x + 8 : 0
-          }px, calc(-100% + ${nearestEventY}px))`
+          }px, calc(${nearestEventY - 7}px))`
         );
         tooltip
           .select('#date')
