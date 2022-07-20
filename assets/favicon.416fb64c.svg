@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="2470"
+   height="1300"
+   viewBox="0 0 2470 1300"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.48.4 r9939"
+   sodipodi:docname="US_flag_13_stars_–_Betsy_Ross.svg">
+  <metadata
+     id="metadata38">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs36" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="678"
+     inkscape:window-height="480"
+     id="namedview34"
+     showgrid="false"
+     inkscape:zoom="0.063967611"
+     inkscape:cx="906.98008"
+     inkscape:cy="-75.960167"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg2" />
+  <rect
+     width="2470"
+     height="1300"
+     fill="#BF0A30"
+     id="rect4"
+     style="fill:#bb133e;fill-opacity:1" />
+  <g
+     fill="#ffffff"
+     id="g6">
+    <g
+       id="Stripes3">
+      <rect
+         id="Stripe"
+         width="2470"
+         height="100"
+         y="100" />
+      <use
+         xlink:href="#Stripe"
+         y="200"
+         id="use10" />
+      <use
+         xlink:href="#Stripe"
+         y="400"
+         id="use12" />
+    </g>
+    <use
+       xlink:href="#Stripes3"
+       y="600"
+       id="use14" />
+    <rect
+       width="823.333333333"
+       height="700"
+       fill="#002868"
+       id="rect16"
+       style="fill:#002664;fill-opacity:1" />
+    <g
+       transform="translate(411.666666667,350)"
+       id="g18">
+      <path
+         transform="translate(0,-233)scale(0.047,0.047)"
+         id="Star"
+         d="M0-1000L-587.785252292,809.016994375L951.056516295-309.016994375H-951.056516295L587.785252292,809.016994375Z" />
+      <g
+         id="Stars4">
+        <use
+           xlink:href="#Star"
+           transform="rotate(27.692307692)"
+           id="use22" />
+        <use
+           xlink:href="#Star"
+           transform="rotate(55.384615385)"
+           id="use24" />
+        <use
+           xlink:href="#Star"
+           transform="rotate(83.076923077)"
+           id="use26" />
+        <use
+           xlink:href="#Star"
+           transform="rotate(110.769230769)"
+           id="use28" />
+      </g>
+      <use
+         xlink:href="#Stars4"
+         transform="rotate(110.769230769)"
+         id="use30" />
+      <use
+         xlink:href="#Stars4"
+         transform="rotate(221.538461538)"
+         id="use32" />
+    </g>
+  </g>
+</svg>
