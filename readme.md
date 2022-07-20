@@ -6,7 +6,7 @@ It uses D3 to build the chart, and Vite to handle buiding and packing and whatno
 
 ## Getting Started
 
-This was built on Node v 16.13.0.
+This was built on Node v16.13.0.
 
 ```
 npm install
