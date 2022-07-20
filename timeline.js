@@ -42,17 +42,17 @@ function timeline() {
     radius: 4
   };
 
-  // color configuration
-  const annotationDefaultColor = '#E4DDEE';
-  const markerDefaultColor = '#9880C2';
-  const markerPersonalColor = '#5598E2';
-  const markerSelectedColor = '#9880C2';
-  const markerFadedColor = '#E4DDEE';
-  const labelDefaultColor = '#331A5B';
-  const labelSelectedColor = '#331A5B';
-  const labelFadedColor = '#E4DDEE';
-  const labelPersonalColor = '#093B72';
-  const annotationPersonalColor = '#CADFF7';
+  // color configuration 
+  const markerDefaultColor = '#5598E2';
+  const markerPersonalColor = '#c28080';
+  const markerSelectedColor = '#c28080';
+  const markerFadedColor = '#eedddd';
+  const labelDefaultColor = '#093B72';
+  const labelSelectedColor = '#5b1a1a';
+  const labelFadedColor = '#eedddd';
+  const labelPersonalColor = '#5b1a1a';
+  const annotationDefaultColor = '#CADFF7';
+  const annotationPersonalColor = '#eedddd';
 
   const timeParser = d3.timeParse("%d %b %Y %I:%M%p");
 
@@ -333,8 +333,7 @@ function timeline() {
   }
 
   function halo(text) {
-    // const backgroundColor = '#FAF9FB';
-    const backgroundColor = 'pink';
+    const backgroundColor = '#FAF9FB';
 
     text
       .clone(true)
