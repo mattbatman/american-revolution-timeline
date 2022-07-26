@@ -12,3 +12,12 @@ This was built on Node v16.13.0.
 npm install
 npm run dev
 ```
+
+## Deploy
+
+The `gh-pages` branch has been designated for deploying a build. To push the
+latest build for deployment:
+
+```
+sh deploy.sh
+```
