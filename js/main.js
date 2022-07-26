@@ -1,4 +1,4 @@
-import './style.css';
+import '../styles/main.css';
 
 import { timeline } from './timeline';
 
