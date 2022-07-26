@@ -42,7 +42,7 @@ function timeline() {
     radius: 4
   };
 
-  // color configuration 
+  // color configuration
   const markerDefaultColor = '#5598E2';
   const markerPersonalColor = '#c28080';
   const markerSelectedColor = '#c28080';
@@ -51,12 +51,10 @@ function timeline() {
   const labelSelectedColor = '#5b1a1a';
   const labelFadedColor = '#eedddd';
   const labelPersonalColor = '#5b1a1a';
-  const annotationDefaultColor = '#CADFF7';
-  const annotationPersonalColor = '#eedddd';
 
-  const timeParser = d3.timeParse("%d %b %Y %I:%M%p");
+  const timeParser = d3.timeParse('%d %b %Y %I:%M%p');
 
-  const eventData = rawEventData.map(d => ({
+  const eventData = rawEventData.map((d) => ({
     ...d,
     date: parseTime(d.date)
   }));
@@ -79,8 +77,6 @@ function timeline() {
       width,
       height
     };
-
-    const annotationsLeftMargin = plotArea.x + 240 + 24;
 
     // create the skeleton of the chart
     const svg = d3
@@ -148,47 +144,6 @@ function timeline() {
         return g.selectAll('.tick text').call(halo);
       });
 
-    const annotations = plot
-      .append('g')
-      .attr('class', 'annotations')
-      .selectAll('g')
-      .data(timespanData)
-      .join('g');
-
-    annotations
-      .append('line')
-      .attr('aria-hidden', 'true')
-      .attr('stroke', annotationDefaultColor)
-      .attr('stroke-width', 3)
-      .attr('x1', annotationsLeftMargin)
-      .attr('x2', annotationsLeftMargin)
-      .attr('y1', (d) => y(d.startDate))
-      .attr('y2', (d) => y(d.endDate));
-
-    annotations
-      .append('text')
-      .attr('x', annotationsLeftMargin + 24)
-      .attr('y', (d) => y(d.startDate))
-      .attr('dy', '0.7em')
-      .style('font-size', 16)
-      .style('font-weight', 600)
-      .text((d) => (width >= spacingConfig.mediumScreenSize ? d.name : ''));
-
-    annotations
-      .append('text')
-      .attr('x', annotationsLeftMargin + 24)
-      .attr('y', (d) => y(d.startDate))
-      .attr('dy', '2.0em')
-      .style('font-size', 16)
-      .style('font-weight', 400)
-      .text((d) =>
-        width >= spacingConfig.mediumScreenSize
-          ? d3.timeFormat('%e %b')(d.startDate) +
-            ' – ' +
-            d3.timeFormat('%e %b')(d.endDate)
-          : ''
-      );
-
     const markers = plot
       .append('g')
       .attr('class', 'markers')
@@ -245,9 +200,7 @@ function timeline() {
       )
       .attr('x', width);
 
-    const tooltip = d3
-      .select('.tooltip')
-      .attr('aria-hidden', 'true').html(`
+    const tooltip = d3.select('.tooltip').attr('aria-hidden', 'true').html(`
       <div class="tooltip-date">
         <span id="date"></span>
       </div>
@@ -388,15 +341,67 @@ function timeline() {
 
     return positions;
   } // end dodge fn
-  
+
   function parseTime(date) {
     // adjusting to 6AM instead of midnight aligns first of month circles with axis tick markers
-    return timeParser(`${date} 06:00AM`)
+    return timeParser(`${date} 06:00AM`);
+  }
+
+  /**
+   * generateAnnotations uses the timespanData to create a secondary line to the
+   * right of the main timeline, referred to as an annotation. A line is drawn
+   * spanning two points with a label. 
+   */
+  function generateAnnotations() {
+    const annotationDefaultColor = '#CADFF7';
+    const annotationPersonalColor = '#eedddd';
+    const annotationsLeftMargin = plotArea.x + 240 + 24;
+
+    const annotations = plot
+      .append('g')
+      .attr('class', 'annotations')
+      .selectAll('g')
+      .data(timespanData)
+      .join('g');
+
+    annotations
+      .append('line')
+      .attr('aria-hidden', 'true')
+      .attr('stroke', annotationDefaultColor)
+      .attr('stroke-width', 3)
+      .attr('x1', annotationsLeftMargin)
+      .attr('x2', annotationsLeftMargin)
+      .attr('y1', (d) => y(d.startDate))
+      .attr('y2', (d) => y(d.endDate));
+
+    annotations
+      .append('text')
+      .attr('x', annotationsLeftMargin + 24)
+      .attr('y', (d) => y(d.startDate))
+      .attr('dy', '0.7em')
+      .style('font-size', 16)
+      .style('font-weight', 600)
+      .text((d) => (width >= spacingConfig.mediumScreenSize ? d.name : ''));
+
+    annotations
+      .append('text')
+      .attr('x', annotationsLeftMargin + 24)
+      .attr('y', (d) => y(d.startDate))
+      .attr('dy', '2.0em')
+      .style('font-size', 16)
+      .style('font-weight', 400)
+      .text((d) =>
+        width >= spacingConfig.mediumScreenSize
+          ? d3.timeFormat('%e %b')(d.startDate) +
+            ' – ' +
+            d3.timeFormat('%e %b')(d.endDate)
+          : ''
+      );
   }
 
   return {
     draw
-  }; 
+  };
 }
 
 export { timeline };
