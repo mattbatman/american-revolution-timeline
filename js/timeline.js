@@ -4,6 +4,8 @@ import timespanData from './timespan-data';
 
 function timeline() {
   const selector = '#timeline';
+  const spaceBetweenMarkerAndEventName = 16;
+  const spaceBetweenMarkerAndEventNameSmallScreen = 12; 
 
   const spacingConfig = {
     smallScreenSize: 768,
@@ -12,17 +14,11 @@ function timeline() {
       top: 60,
       right: 8,
       bottom: 192,
-      left: 8,
+      left: 80,
       axisLeft: 144
     },
-    event: {
-      offset: 24
-    },
-    smallScreenEvent: {
-      offset: 16
-    },
     normalMargin: {
-      left: 104,
+      left: 80,
       right: 96,
       top: 10,
       bottom: 192,
@@ -185,8 +181,8 @@ function timeline() {
       .attr(
         'x',
         width >= spacingConfig.smallScreenSize
-          ? spacingConfig.event.offset
-          : spacingConfig.smallScreenEvent.offset
+          ? spaceBetweenMarkerAndEventName
+          : spaceBetweenMarkerAndEventNameSmallScreen
       )
       .attr('y', ([, y]) => y)
       .attr('dy', '0.35em');
