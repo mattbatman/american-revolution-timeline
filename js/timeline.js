@@ -347,6 +347,11 @@ function timeline() {
     return timeParser(`${date} 06:00AM`);
   }
 
+  /**
+   * generateAnnotations uses the timespanData to create a secondary line to the
+   * right of the main timeline, referred to as an annotation. A line is drawn
+   * spanning two points with a label. 
+   */
   function generateAnnotations() {
     const annotationDefaultColor = '#CADFF7';
     const annotationPersonalColor = '#eedddd';
