@@ -5,24 +5,26 @@ import timespanData from './timespan-data';
 function timeline() {
   const selector = '#timeline';
   const spaceBetweenMarkerAndEventName = 16;
-  const spaceBetweenMarkerAndEventNameSmallScreen = 12; 
-
+  const spaceBetweenMarkerAndEventNameSmallScreen = 12;
+  // axisLeft is the spacing between the y axis label (e.g. year) and y axis line
+  const axisLeft = 100;
+  const axisLeftSmallScreen = 75;
+  // bottom margin keeps the last item in the timeline on the screen
+  // top margin seems to affect the centering of the chart
   const spacingConfig = {
     smallScreenSize: 768,
     mediumScreenSize: 940,
     smallScreenMargin: {
       top: 60,
-      right: 8,
+      right: 0,
       bottom: 192,
-      left: 80,
-      axisLeft: 144
+      left: 30,
     },
     normalMargin: {
-      left: 80,
-      right: 96,
+      left: 60,
+      right: 0,
       top: 10,
       bottom: 192,
-      axisLeft: 144
     }
   };
 
@@ -115,20 +117,18 @@ function timeline() {
       .scaleUtc()
       .domain(d3.extent(eventData, (d) => d.date))
       .range([plotArea.y, plotArea.height]);
+    
+    const tickPaddingAndSize = width >= spacingConfig.smallScreenSize
+      ? -axisLeft
+      : -axisLeftSmallScreen;
 
-    const yAxis =
-      width >= spacingConfig.smallScreenSize
-        ? d3
-            .axisRight(y)
-            .tickPadding(-spacingConfig.normalMargin.axisLeft)
-            .tickSizeOuter(0)
-            .tickSizeInner(-spacingConfig.normalMargin.axisLeft)
-        : d3
-            .axisRight(y)
-            .tickPadding(-spacingConfig.smallScreenMargin.axisLeft)
-            .tickSizeOuter(0)
-            .tickSizeInner(-spacingConfig.smallScreenMargin.axisLeft)
-            .tickFormat(d3.timeFormat('%b'));
+    const yAxis = d3
+      .axisRight(y)
+      // would draw a line to the right of top and bottom of axis
+      .tickSizeOuter(0)
+      // creates the from the tick label to the y axis 
+      .tickPadding(tickPaddingAndSize)
+      .tickSizeInner(tickPaddingAndSize);
 
     const gy = plot
       .append('g')
