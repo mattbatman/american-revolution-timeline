@@ -17,14 +17,14 @@ function timeline() {
     smallScreenMargin: {
       top: 60,
       right: 0,
-      bottom: 192,
+      bottom: 50,
       left: 30,
     },
     normalMargin: {
       left: 60,
       right: 0,
       top: 10,
-      bottom: 192,
+      bottom: 50,
     }
   };
 
