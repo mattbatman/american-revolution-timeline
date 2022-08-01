@@ -271,7 +271,7 @@ function timeline() {
         );
         tooltip
           .select('#date')
-          .text(d3.timeFormat('%A, %e %B')(dataEvent.date));
+          .text(d3.timeFormat('%A, %e %B, %Y')(dataEvent.date));
         tooltip.select('#name').text(dataEvent.eventName);
         tooltip.select('#description').text(dataEvent.eventDescription);
       }
