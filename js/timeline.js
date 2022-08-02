@@ -28,14 +28,6 @@ function timeline() {
     }
   };
 
-  const labelSeparation = {
-    min: 12,
-    max: 48,
-    step: 2,
-    value: 24,
-    title: 'Label separation'
-  };
-
   const marker = {
     radius: 4
   };
@@ -59,7 +51,10 @@ function timeline() {
 
   function draw() {
     const containerWidth = parseInt(d3.select(selector).style('width'));
-    const containerHeight = parseInt(d3.select(selector).style('height'));
+    const containerHeight = d3.max([
+      parseInt(d3.select(selector).style('height')),
+      (1783 - 1775) * 150
+    ]);
     const width =
       containerWidth -
       spacingConfig.normalMargin.left -
@@ -164,7 +159,7 @@ function timeline() {
 
     const dodgedYValues = dodge(
       eventData.map((d) => y(d.date)),
-      labelSeparation
+      16
     );
 
     const eventLabels = plot
@@ -300,7 +295,10 @@ function timeline() {
       );
   }
 
-  function dodge(positions, separation = 10, maxiter = 10, maxerror = 1e-1) {
+  // The dodge function takes an array of positions (e.g. X values along an X Axis) in floating point numbers
+// The dodge function optionally takes customisable separation, iteration, and error values.
+// The dodge function returns a similar array of positions, but slightly dodged from where they were in an attempt to separate them out. It restrains the result a little bit so that the elements don't explode all over the place and so they don't go out of bounds.
+  function dodge(positions, separation = 100, maxiter = 10, maxerror = 1e-1) {
     // TODO: remove
     positions = Array.from(positions);
 
