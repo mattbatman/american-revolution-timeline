@@ -233,7 +233,9 @@ function timeline() {
       const dodgedIndex = rangeY.indexOf(nearestEventY);
       const dataEvent = eventData[dodgedIndex];
 
-      if (mouseY >= rangeY0 - fuzzyTextHeightAdjustment) {
+      const distance = Math.abs(mouseY - nearestEventY);
+
+      if (mouseY >= rangeY0 - fuzzyTextHeightAdjustment && distance < 10) {
         eventLabels.filter((d, i) => i !== dodgedIndex).style('opacity', 0.3);
 
         eventLabels.filter((d, i) => i === dodgedIndex).style('opacity', 1);
@@ -269,6 +271,22 @@ function timeline() {
           .text(d3.timeFormat('%A, %e %B, %Y')(dataEvent.date));
         tooltip.select('#name').text(dataEvent.eventName);
         tooltip.select('#description').text(dataEvent.eventDescription);
+      } else {
+        markers
+          .attr('fill', (d) =>
+            d.sharedOrPersonal === 'Shared'
+              ? markerDefaultColor
+              : markerPersonalColor
+          )
+          .attr('stroke', (d) =>
+            d.sharedOrPersonal === 'Shared'
+              ? markerDefaultColor
+              : markerPersonalColor
+          );
+
+        eventLabels.style('opacity', 1);
+
+        tooltip.style('opacity', 0)
       }
     });
 
