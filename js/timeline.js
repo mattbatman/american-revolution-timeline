@@ -184,13 +184,6 @@ function timeline() {
 
     eventLabels.append('tspan').text(([d]) => d.eventName);
 
-    eventLabels
-      .append('tspan')
-      .text(
-        ([d]) => ` ${d.eventDescription} ${d3.timeFormat('%A, %e %B')(d.date)}`
-      )
-      .attr('x', width);
-
     const tooltip = d3.select('.tooltip').attr('aria-hidden', 'true').html(`
       <div class="tooltip-date">
         <span id="date"></span>
