@@ -255,6 +255,7 @@ function timeline() {
           .raise();
 
         tooltip.style('opacity', 1);
+        tooltip.attr('class', () => dataEvent.isWar ? 'tooltip war' : 'tooltip')
         tooltip.style(
           'transform',
           `translate(${
