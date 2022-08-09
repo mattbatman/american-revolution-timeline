@@ -9,19 +9,19 @@ const data = [
 		date: '19 Apr 1775',
 		eventName: "The Shot Heard Round the World",
 		eventDescription: "British troops met American militia around Lexington, MA. The American militia started to disperse. A shot was fired, and though it was unclear who fired the shot or whether it was intentional, the two sides started fighting.",
-		isWar: true 
+		isWar: true
 	},
 	{
 		date: '4 Jul 1776',
 		eventName: "Declaration of Independence",
 		eventDescription: "The declaration of independence was signed.",
-		isWar: true 
+		isWar: true
 	},
 	{
 		date: '3 Sep 1783',
 		eventName: "Treaty of Paris",
 		eventDescription: "The Treaty of Paris was signed",
-		isWar: true 
+		isWar: true
 	},
 ]
 

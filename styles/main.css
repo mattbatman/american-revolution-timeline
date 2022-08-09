@@ -96,6 +96,10 @@ Tooltip Related Styles
     z-index: 1;
   }
 
+  .tooltip.war {
+    border: 1px solid #c28080;
+  }
+
   .tooltip-date {
     margin-bottom: 0.2em;
     font-size: 0.7em;
