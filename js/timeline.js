@@ -34,13 +34,13 @@ function timeline() {
 
   // color configuration
   const markerDefaultColor = '#5598E2';
-  const markerPersonalColor = '#c28080';
+  const markerWarColor = '#c28080';
   const markerSelectedColor = '#c28080';
   const markerFadedColor = '#eedddd';
   const labelDefaultColor = '#093B72';
   const labelSelectedColor = '#5b1a1a';
   const labelFadedColor = '#eedddd';
-  const labelPersonalColor = '#5b1a1a';
+  const labelWarColor = '#5b1a1a';
 
   const timeParser = d3.timeParse('%d %b %Y %I:%M%p');
 
@@ -144,14 +144,14 @@ function timeline() {
       .attr('transform', (d) => `translate(0, ${y(d.date)})`)
       .attr('aria-hidden', 'true')
       .attr('fill', (d) =>
-        d.sharedOrPersonal === 'Shared'
-          ? markerDefaultColor
-          : markerPersonalColor
+        d.isWar
+          ? markerWarColor
+          : markerDefaultColor
       )
       .attr('stroke', (d) =>
-        d.sharedOrPersonal === 'Shared'
-          ? markerDefaultColor
-          : markerPersonalColor
+        d.isWar
+          ? markerWarColor
+          : markerDefaultColor
       )
       .attr('cx', 0.5)
       .attr('cy', marker.radius / 2 + 0.5)
@@ -171,7 +171,9 @@ function timeline() {
       .attr('class', 'event-title')
       .style('font-weight', '400')
       .style('fill', ([d]) =>
-        d.sharedOrPersonal === 'Shared' ? labelDefaultColor : labelPersonalColor
+        d.isWar
+          ? labelWarColor
+          : labelDefaultColor
       )
       .attr(
         'x',
@@ -205,14 +207,14 @@ function timeline() {
     svg.on('touchend mouseout', function (event) {
       markers
         .attr('fill', (d) =>
-          d.sharedOrPersonal === 'Shared'
-            ? markerDefaultColor
-            : markerPersonalColor
+          d.isWar
+            ? markerWarColor
+            : markerDefaultColor
         )
         .attr('stroke', (d) =>
-          d.sharedOrPersonal === 'Shared'
-            ? markerDefaultColor
-            : markerPersonalColor
+          d.isWar
+            ? markerWarColor
+            : markerDefaultColor
         );
 
       eventLabels.style('opacity', 1);
@@ -241,14 +243,14 @@ function timeline() {
         markers
           .filter((d, i) => i === dodgedIndex)
           .attr('fill', (d) =>
-            d.sharedOrPersonal === 'Shared'
-              ? markerDefaultColor
-              : markerPersonalColor
+            d.isWar
+              ? markerWarColor
+              : markerDefaultColor
           )
           .attr('stroke', (d) =>
-            d.sharedOrPersonal === 'Shared'
-              ? markerDefaultColor
-              : markerPersonalColor
+            d.isWar
+              ? markerWarColor
+              : markerDefaultColor
           )
           .raise();
 
@@ -267,14 +269,14 @@ function timeline() {
       } else {
         markers
           .attr('fill', (d) =>
-            d.sharedOrPersonal === 'Shared'
-              ? markerDefaultColor
-              : markerPersonalColor
+            d.isWar
+              ? markerWarColor
+              : markerDefaultColor
           )
           .attr('stroke', (d) =>
-            d.sharedOrPersonal === 'Shared'
-              ? markerDefaultColor
-              : markerPersonalColor
+            d.isWar
+              ? markerWarColor
+              : markerDefaultColor
           );
 
         eventLabels.style('opacity', 1);
