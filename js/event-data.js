@@ -12,6 +12,12 @@ const data = [
 		isWar: true
 	},
 	{
+		date: '10 Jan 1776',
+		eventName: "Common Sense",
+		eventDescription: "Common Sense (Thomas Paine) was published anonymously. It was widely read, and is credited for spreading support for the independence movement.",
+		isWar: false
+	},
+	{
 		date: '4 Jul 1776',
 		eventName: "Declaration of Independence",
 		eventDescription: "The declaration of independence was signed.",
