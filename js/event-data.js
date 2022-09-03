@@ -21,6 +21,12 @@ const data = [
 		date: '4 Jul 1776',
 		eventName: "Declaration of Independence",
 		eventDescription: "The declaration of independence was signed.",
+		isWar: false
+	},
+	{
+		date: '25 Dec 1776',
+		eventName: "Crossing the Delaware",
+		eventDescription: "Starting the evening of Christmas 1776, George Washington led the American army back across the Delaware River from Pennsylvania, to launch a surprise attack against Hessian (Germany mercenary) forces in Trenton, NJ. This is commonly considered a turning point in the war.",
 		isWar: true
 	},
 	{
