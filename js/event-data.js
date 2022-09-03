@@ -12,6 +12,12 @@ const data = [
 		isWar: true
 	},
 	{
+		date: '22 Jun 1775',
+		eventName: "George Washington Appointed General",
+		eventDescription: "George Washington was appointed General of the American army by the Continental Congress. He was to immediately take over the siege of Boston.",
+		isWar: true
+	},
+	{
 		date: '10 Jan 1776',
 		eventName: "Common Sense",
 		eventDescription: "Common Sense (Thomas Paine) was published anonymously. It was widely read, and is credited for spreading support for the independence movement.",
