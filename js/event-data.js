@@ -18,6 +18,12 @@ const data = [
 		isWar: false
 	},
 	{
+		date: '17 Mar 1776',
+		eventName: "End of the Siege of Boston",
+		eventDescription: "British troops withdrew from Boston by sea.",
+		isWar: true
+	},
+	{
 		date: '4 Jul 1776',
 		eventName: "Declaration of Independence",
 		eventDescription: "The declaration of independence was signed.",
