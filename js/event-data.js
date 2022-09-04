@@ -30,10 +30,28 @@ const data = [
 		isWar: true
 	},
 	{
+		date: '2 Jul 1776',
+		eventName: "British Arrive in New York",
+		eventDescription: "British troops landed on Staten Island. After fleeing Boston, they sailed to Halifax, Nova Scotia, then to New York.",
+		isWar: true
+	},
+	{
 		date: '4 Jul 1776',
 		eventName: "Declaration of Independence",
 		eventDescription: "The declaration of independence was signed.",
 		isWar: false
+	},
+		{
+		date: '9 Jul 1776',
+		eventName: "Toppling of the King George III Statue",
+		eventDescription: "General George Washington had the Declaration of Independence read to the Continental Army defending New York City. They reportedly got so excited they tore down a statue of King George III and melted the statue to make bullets.",
+		isWar: false
+	},
+	{
+		date: '16 Nov 1776',
+		eventName: "Battle of Fort Washington",
+		eventDescription: "British and Hessian forces took Fort Washington, the Continental Army's last base on Manhattan Island. They suffered ~200 casualties and ~2,800 men surrendered.",
+		isWar: true
 	},
 	{
 		date: '25 Dec 1776',
