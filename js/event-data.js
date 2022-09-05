@@ -60,6 +60,18 @@ const data = [
 		isWar: true
 	},
 	{
+		date: '2 Jan 1777',
+		eventName: "Battle of the Assunpink Creek",
+		eventDescription: "After crossing the Delaware and winning a battle in Trenton against Hessian forces, the Continental Army crossed back over to Pennsylvania, then crossed back over and engaged in a second battle around Trenton with British forces. The British Army appeared to have the Continental Army in position for a resounding defeat, but the Continental Army retreated in the night. It's thought that Washington wanted to avoid the appearance of a retreat for political and morale reasons, so he circled around and attached the British at Princeton the next day.",
+		isWar: true
+	},
+	{
+		date: '3 Jan 1777',
+		eventName: "Battle of Princeton",
+		eventDescription: "The Battle of Princeton, along with crossing the Delaware and the first Battle of Trenton, are considered essential for maintaining morale in the Continental Army and general faith in the chances of success in the revolution.",
+		isWar: true
+	},
+	{
 		date: '3 Sep 1783',
 		eventName: "Treaty of Paris",
 		eventDescription: "The Treaty of Paris was signed",

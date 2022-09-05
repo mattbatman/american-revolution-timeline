@@ -53,7 +53,7 @@ function timeline() {
     const containerWidth = parseInt(d3.select(selector).style('width'));
     const containerHeight = d3.max([
       parseInt(d3.select(selector).style('height')),
-      (1783 - 1775) * 150
+      (1783 - 1775) * 175
     ]);
     const width =
       containerWidth -
