@@ -51,6 +51,13 @@ text {
   line-height: 1.4;
 }
 
+h1 {
+  font-size: 13vw;
+  margin-bottom: 1rem;
+  margin-top: 0;
+  line-height: 0.9;
+}
+
 @media (max-width: 768px) {
 
   text,
