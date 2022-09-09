@@ -75,7 +75,7 @@ const data = [
 		date: '26 Sep 1777',
 		eventName: "British Occupy Philadelphia",
 		eventDescription: "The British Army occupied Philadelphia. The event was uncontested.",
-		isWare: true
+		isWar: true
 	},
 	{
 		date: '3 Sep 1783',
