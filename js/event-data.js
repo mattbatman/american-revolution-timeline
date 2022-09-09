@@ -72,6 +72,12 @@ const data = [
 		isWar: true
 	},
 	{
+		date: '26 Sep 1777',
+		eventName: "British Occupy Philadelphia",
+		eventDescription: "The British Army occupied Philadelphia. The event was uncontested.",
+		isWare: true
+	},
+	{
 		date: '3 Sep 1783',
 		eventName: "Treaty of Paris",
 		eventDescription: "The Treaty of Paris was signed",
