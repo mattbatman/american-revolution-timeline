@@ -2,7 +2,7 @@
 
 This code and design was originally based off of [2020 Timeline by Di on Observable](https://observablehq.com/@didoesdigital/2020-timeline).
 
-It uses D3 to build the chart, and Vite to handle buiding and packing and whatnot.
+It uses D3 to build the chart, and Vite to handle building and packing and whatnot.
 
 ## Getting Started
 
