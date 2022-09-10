@@ -18,13 +18,13 @@ function timeline() {
       top: 60,
       right: 0,
       bottom: 50,
-      left: 30,
+      left: 30
     },
     normalMargin: {
       left: 60,
       right: 0,
       top: 10,
-      bottom: 50,
+      bottom: 50
     }
   };
 
@@ -112,16 +112,15 @@ function timeline() {
       .scaleUtc()
       .domain(d3.extent(eventData, (d) => d.date))
       .range([plotArea.y, plotArea.height]);
-    
-    const tickPaddingAndSize = width >= spacingConfig.smallScreenSize
-      ? -axisLeft
-      : -axisLeftSmallScreen;
+
+    const tickPaddingAndSize =
+      width >= spacingConfig.smallScreenSize ? -axisLeft : -axisLeftSmallScreen;
 
     const yAxis = d3
       .axisRight(y)
       // would draw a line to the right of top and bottom of axis
       .tickSizeOuter(0)
-      // creates the from the tick label to the y axis 
+      // creates the from the tick label to the y axis
       .tickPadding(tickPaddingAndSize)
       .tickSizeInner(tickPaddingAndSize);
 
@@ -143,16 +142,8 @@ function timeline() {
       .join('circle')
       .attr('transform', (d) => `translate(0, ${y(d.date)})`)
       .attr('aria-hidden', 'true')
-      .attr('fill', (d) =>
-        d.isWar
-          ? markerWarColor
-          : markerDefaultColor
-      )
-      .attr('stroke', (d) =>
-        d.isWar
-          ? markerWarColor
-          : markerDefaultColor
-      )
+      .attr('fill', (d) => (d.isWar ? markerWarColor : markerDefaultColor))
+      .attr('stroke', (d) => (d.isWar ? markerWarColor : markerDefaultColor))
       .attr('cx', 0.5)
       .attr('cy', marker.radius / 2 + 0.5)
       .attr('r', marker.radius);
@@ -170,11 +161,7 @@ function timeline() {
       .join('text')
       .attr('class', 'event-title')
       .style('font-weight', '400')
-      .style('fill', ([d]) =>
-        d.isWar
-          ? labelWarColor
-          : labelDefaultColor
-      )
+      .style('fill', ([d]) => (d.isWar ? labelWarColor : labelDefaultColor))
       .attr(
         'x',
         width >= spacingConfig.smallScreenSize
@@ -206,16 +193,8 @@ function timeline() {
 
     svg.on('touchend mouseout', function (event) {
       markers
-        .attr('fill', (d) =>
-          d.isWar
-            ? markerWarColor
-            : markerDefaultColor
-        )
-        .attr('stroke', (d) =>
-          d.isWar
-            ? markerWarColor
-            : markerDefaultColor
-        );
+        .attr('fill', (d) => (d.isWar ? markerWarColor : markerDefaultColor))
+        .attr('stroke', (d) => (d.isWar ? markerWarColor : markerDefaultColor));
 
       eventLabels.style('opacity', 1);
     });
@@ -232,10 +211,8 @@ function timeline() {
 
       if (mouseY >= rangeY0 - fuzzyTextHeightAdjustment && distance < 10) {
         const h1 = d3.select('h1');
-        const h1Height = h1
-          ? h1.node().getBoundingClientRect().height
-          : 0;
-       
+        const h1Height = h1 ? h1.node().getBoundingClientRect().height : 0;
+
         eventLabels.filter((d, i) => i !== dodgedIndex).style('opacity', 0.3);
 
         eventLabels.filter((d, i) => i === dodgedIndex).style('opacity', 1);
@@ -247,48 +224,44 @@ function timeline() {
 
         markers
           .filter((d, i) => i === dodgedIndex)
-          .attr('fill', (d) =>
-            d.isWar
-              ? markerWarColor
-              : markerDefaultColor
-          )
+          .attr('fill', (d) => (d.isWar ? markerWarColor : markerDefaultColor))
           .attr('stroke', (d) =>
-            d.isWar
-              ? markerWarColor
-              : markerDefaultColor
+            d.isWar ? markerWarColor : markerDefaultColor
           )
           .raise();
 
-        tooltip.attr('class', () => dataEvent.isWar ? 'tooltip war' : 'tooltip');
+        tooltip.attr('class', () =>
+          dataEvent.isWar ? 'tooltip war' : 'tooltip'
+        );
+
         const tooltipHeight = tooltip.node().getBoundingClientRect().height;
+
         tooltip.style(
           'transform',
           `translate(${
             width >= spacingConfig.smallScreenSize ? plotArea.x + 8 : 0
           }px, calc(${nearestEventY + h1Height - tooltipHeight}px))`
         );
+
         tooltip
           .select('#date')
           .text(d3.timeFormat('%A, %e %B, %Y')(dataEvent.date));
+
         tooltip.select('#name').text(dataEvent.eventName);
+
         tooltip.select('#description').text(dataEvent.eventDescription);
+
         tooltip.style('opacity', 1);
       } else {
         markers
-          .attr('fill', (d) =>
-            d.isWar
-              ? markerWarColor
-              : markerDefaultColor
-          )
+          .attr('fill', (d) => (d.isWar ? markerWarColor : markerDefaultColor))
           .attr('stroke', (d) =>
-            d.isWar
-              ? markerWarColor
-              : markerDefaultColor
+            d.isWar ? markerWarColor : markerDefaultColor
           );
 
         eventLabels.style('opacity', 1);
 
-        tooltip.style('opacity', 0)
+        tooltip.style('opacity', 0);
       }
     });
 
@@ -316,8 +289,8 @@ function timeline() {
   }
 
   // The dodge function takes an array of positions (e.g. X values along an X Axis) in floating point numbers
-// The dodge function optionally takes customisable separation, iteration, and error values.
-// The dodge function returns a similar array of positions, but slightly dodged from where they were in an attempt to separate them out. It restrains the result a little bit so that the elements don't explode all over the place and so they don't go out of bounds.
+  // The dodge function optionally takes customisable separation, iteration, and error values.
+  // The dodge function returns a similar array of positions, but slightly dodged from where they were in an attempt to separate them out. It restrains the result a little bit so that the elements don't explode all over the place and so they don't go out of bounds.
   function dodge(positions, separation = 100, maxiter = 10, maxerror = 1e-1) {
     // TODO: remove
     positions = Array.from(positions);
@@ -364,7 +337,7 @@ function timeline() {
   /**
    * generateAnnotations uses the timespanData to create a secondary line to the
    * right of the main timeline, referred to as an annotation. A line is drawn
-   * spanning two points with a label. 
+   * spanning two points with a label.
    */
   function generateAnnotations() {
     const annotationDefaultColor = '#CADFF7';
