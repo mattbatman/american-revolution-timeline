@@ -234,15 +234,6 @@ function timeline() {
           dataEvent.isWar ? 'tooltip war' : 'tooltip'
         );
 
-        const tooltipHeight = tooltip.node().getBoundingClientRect().height;
-
-        tooltip.style(
-          'transform',
-          `translate(${
-            width >= spacingConfig.smallScreenSize ? plotArea.x + 8 : 0
-          }px, calc(${nearestEventY + h1Height - tooltipHeight}px))`
-        );
-
         tooltip
           .select('#date')
           .text(d3.timeFormat('%A, %e %B, %Y')(dataEvent.date));
@@ -250,6 +241,20 @@ function timeline() {
         tooltip.select('#name').text(dataEvent.eventName);
 
         tooltip.select('#description').text(dataEvent.eventDescription);
+
+        const tooltipHeight = tooltip.node().getBoundingClientRect().height;
+
+        const translationYOffset =
+          dodgedIndex < 3
+            ? nearestEventY + h1Height + 65
+            : nearestEventY + h1Height - tooltipHeight;
+
+        tooltip.style(
+          'transform',
+          `translate(${
+            width >= spacingConfig.smallScreenSize ? plotArea.x + 8 : 0
+          }px, ${translationYOffset}px)`
+        );
 
         tooltip.style('opacity', 1);
       } else {
