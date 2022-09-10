@@ -231,6 +231,11 @@ function timeline() {
       const distance = Math.abs(mouseY - nearestEventY);
 
       if (mouseY >= rangeY0 - fuzzyTextHeightAdjustment && distance < 10) {
+        const h1 = d3.select('h1');
+        const h1Height = h1
+          ? h1.node().getBoundingClientRect().height
+          : 0;
+       
         eventLabels.filter((d, i) => i !== dodgedIndex).style('opacity', 0.3);
 
         eventLabels.filter((d, i) => i === dodgedIndex).style('opacity', 1);
@@ -254,19 +259,20 @@ function timeline() {
           )
           .raise();
 
-        tooltip.style('opacity', 1);
-        tooltip.attr('class', () => dataEvent.isWar ? 'tooltip war' : 'tooltip')
+        tooltip.attr('class', () => dataEvent.isWar ? 'tooltip war' : 'tooltip');
+        const tooltipHeight = tooltip.node().getBoundingClientRect().height;
         tooltip.style(
           'transform',
           `translate(${
             width >= spacingConfig.smallScreenSize ? plotArea.x + 8 : 0
-          }px, calc(${nearestEventY - 7}px))`
+          }px, calc(${nearestEventY + h1Height - tooltipHeight}px))`
         );
         tooltip
           .select('#date')
           .text(d3.timeFormat('%A, %e %B, %Y')(dataEvent.date));
         tooltip.select('#name').text(dataEvent.eventName);
         tooltip.select('#description').text(dataEvent.eventDescription);
+        tooltip.style('opacity', 1);
       } else {
         markers
           .attr('fill', (d) =>

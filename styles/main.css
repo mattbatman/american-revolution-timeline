@@ -98,7 +98,7 @@ Tooltip Related Styles
     pointer-events: none;
     border-radius: 5px;
     position: absolute;
-    top: -8px;
+    top: 0;
     transition: opacity 0.1s linear, transform 0.05s ease-in-out;
     z-index: 1;
   }
