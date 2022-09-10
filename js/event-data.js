@@ -72,6 +72,12 @@ const data = [
 		isWar: true
 	},
 	{
+		date: '11 Sep 1777',
+		eventName: "Battle of Brandywine Creek",
+		eventDescription: "Washington and the Continental Army attempted to stand against Howe's and the British Army's march towards Philadelphia. Washington seemed to have bad intelligence on the geography of the area, and left at least two fords for crossing the creek undefended. A smaller British force attacked the American Army as expected, while another contingent crossed the river to attack the Americans from another direction.",
+		isWar: true
+	},
+	{
 		date: '26 Sep 1777',
 		eventName: "British Occupy Philadelphia",
 		eventDescription: "The British Army occupied Philadelphia. The event was uncontested.",
