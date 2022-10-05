@@ -84,11 +84,41 @@ const data = [
 		isWar: true
 	},
 	{
+		date: '17 Oct 1777',
+		eventName: "Burgoyne Surrenders at Saratoga",
+		eventDescription: "John Burgoyne surrendered ~7,000 British soldiers to Horatio Gates and Benedict Arnold, ending his northern campaign.",
+		isWar: true
+	},
+	{
+		date: '19 Oct 1781',
+		eventName: "Surrender at Siege of Yorktown",
+		eventDescription: "The terms of British surrender were signed for the Siege of Yorktown. This is generally considered the last major battle of the American Revolution.",
+		isWar: true
+	},
+	{
 		date: '3 Sep 1783',
 		eventName: "Treaty of Paris",
 		eventDescription: "The Treaty of Paris was signed",
 		isWar: true
 	},
+		{
+		date: '25 Nov 1783',
+		eventName: "British Withdrawal from New York City",
+		eventDescription: "British troops withdraw from New York City, while George Washington and a small contingent of soldiers entered the city and changed the flags.",
+		isWar: true
+	},
+	{
+		date: '23 Dec 1783',
+		eventName: "George Washington Resigns",
+		eventDescription: "George Washington resigned before Congress in Annapolis, MD. For relinquishing power, he was and is still compared to Cincinnatus of Rome.",
+		isWar: true
+	},
+  {
+		date: '30 Apr 1789',
+		eventName: "George Washington's Inauguration",
+		eventDescription: "George Washington was inaugurated as the first President of the United States in New York City.",
+		isWar: false 
+	}
 ]
 
 export default data;
