@@ -36,7 +36,14 @@ h1 {
 }
 
 .year-backgrounds {
-  fill: #FAF9FB;
+  fill: #faf9fb;
+}
+
+body,
+main,
+.timeline,
+svg {
+  max-width: 100vw;
 }
 
 /*
@@ -49,7 +56,8 @@ h1 {
   font-family: 'Century Gothic', Avenir, 'Franklin Gothic', Futura, system-ui,
     -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, sans-serif;
   left: 0;
-  max-width: 300px;
+  width: 300px;
+  max-width: 100vw;
   opacity: 0;
   padding: calc(16px - 1px);
   /* border width adjustment */
