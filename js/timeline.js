@@ -1,75 +1,84 @@
 import * as d3 from 'd3';
-import rawEventData from './event-data';
-import timespanData from './timespan-data';
 
-function timeline() {
-  const selector = '#timeline';
-  const spaceBetweenMarkerAndEventName = 16;
-  const spaceBetweenMarkerAndEventNameSmallScreen = 12;
-  // axisLeft is the spacing between the y axis label (e.g. year) and y axis line
-  const axisLeft = 100;
-  const axisLeftSmallScreen = 75;
-  // bottom margin keeps the last item in the timeline on the screen
-  // top margin seems to affect the centering of the chart
-  const spacingConfig = {
-    smallScreenSize: 768,
-    mediumScreenSize: 940,
-    smallScreenMargin: {
-      top: 60,
-      right: 0,
-      bottom: 50,
-      left: 30
-    },
-    normalMargin: {
-      left: 60,
-      right: 0,
-      top: 10,
-      bottom: 50
-    }
-  };
-
-  const marker = {
-    radius: 4
-  };
-
-  // color configuration
-  const markerDefaultColor = '#5598E2';
-  const markerWarColor = '#c28080';
-  const markerSelectedColor = '#c28080';
-  const markerFadedColor = '#eedddd';
-  const labelDefaultColor = '#093B72';
-  const labelSelectedColor = '#5b1a1a';
-  const labelFadedColor = '#eedddd';
-  const labelWarColor = '#5b1a1a';
-
-  const timeParser = d3.timeParse('%d %b %Y %I:%M%p');
-
-  const eventData = rawEventData.map((d) => ({
-    ...d,
-    date: parseTime(d.date)
-  }));
-
-  function draw() {
+function twoSidedTimeline() {
+  function draw({ eventData, yearsToMark, selector }) {
     const containerWidth = parseInt(d3.select(selector).style('width'));
     const containerHeight = d3.max([
       parseInt(d3.select(selector).style('height')),
       (1789 - 1775) * 175
     ]);
-    const width =
-      containerWidth -
-      spacingConfig.normalMargin.left -
-      spacingConfig.normalMargin.right;
-    const height =
-      containerHeight -
-      spacingConfig.normalMargin.top -
-      spacingConfig.normalMargin.bottom;
+
+    const margin = {
+      left: 0,
+      right: 0,
+      top: 10,
+      bottom: 50
+    };
+
+    const width = containerWidth - margin.left - margin.right;
+
+    const height = containerHeight - margin.top - margin.bottom;
 
     const plotArea = {
-      x: spacingConfig.normalMargin.left,
-      y: spacingConfig.normalMargin.top,
+      x: margin.left,
+      y: margin.top,
       width,
       height
     };
+
+    const marker = {
+      radius: 4,
+      warColor: '#c28080',
+      defaultColor: '#5598E2',
+      fadedColor: '#eedddd',
+      selectedColor: '#c28080'
+    };
+
+    const labelDefaultColor = '#093B72';
+    const labelSelectedColor = '#5b1a1a';
+    const labelFadedColor = '#eedddd';
+    const labelWarColor = '#5b1a1a';
+
+    // The dodge function takes an array of positions (e.g. X values along an X Axis) in floating point numbers
+    // The dodge function optionally takes customisable separation, iteration, and error values.
+    // The dodge function returns a similar array of positions, but slightly dodged from where they were in an attempt to separate them out. It restrains the result a little bit so that the elements don't explode all over the place and so they don't go out of bounds.
+    function dodge(positions, separation = 100, maxiter = 10, maxerror = 1e-1) {
+      // TODO: remove
+      positions = Array.from(positions);
+
+      let n = positions.length;
+
+      // isFinite is a JS global
+      // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/isFinite
+      if (!positions.every(isFinite)) {
+        throw new Error('invalid position');
+      }
+
+      if (!(n > 1)) {
+        return positions;
+      }
+
+      let index = d3.range(positions.length);
+      for (let iter = 0; iter < maxiter; ++iter) {
+        index.sort((i, j) => d3.ascending(positions[i], positions[j]));
+
+        let error = 0;
+        for (let i = 1; i < n; ++i) {
+          let delta = positions[index[i]] - positions[index[i - 1]];
+
+          if (delta < separation) {
+            delta = (separation - delta) / 2;
+            error = Math.max(error, delta);
+            positions[index[i - 1]] -= delta;
+            positions[index[i]] += delta;
+          }
+        }
+
+        if (error < maxerror) break;
+      }
+
+      return positions;
+    } // end dodge fn
 
     // create the skeleton of the chart
     const svg = d3
@@ -78,61 +87,53 @@ function timeline() {
       .attr('width', '100%')
       .attr('height', containerHeight)
       .append('g')
-      .attr(
-        'transform',
-        'translate(' +
-          spacingConfig.normalMargin.left +
-          ', ' +
-          spacingConfig.normalMargin.top +
-          ')'
-      );
-
-    const chartBackground = svg
-      .append('rect')
-      .attr('id', 'chart-background')
-      .attr('fill', '#fff') // fallback for CSS
-      .attr('x', 0)
-      .attr('y', 0)
-      .attr('width', width)
-      .attr('height', height);
+      .attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')');
 
     const plot = svg
       .append('g')
       .attr('id', 'plot')
-      .attr(
-        'transform',
-        `translate(${
-          width >= spacingConfig.smallScreenSize
-            ? plotArea.x
-            : spacingConfig.smallScreenMargin.left
-        }, ${plotArea.y})`
-      );
+      .attr('transform', `translate(${plotArea.x}, ${plotArea.y})`);
 
     const y = d3
       .scaleUtc()
-      .domain(d3.extent(eventData, (d) => d.date))
+      .domain(d3.extent(yearsToMark, (d) => d.date))
       .range([plotArea.y, plotArea.height]);
 
-    const tickPaddingAndSize =
-      width >= spacingConfig.smallScreenSize ? -axisLeft : -axisLeftSmallScreen;
+    const dodgedYValues = dodge(
+      eventData.map((d) => y(d.date)),
+      16
+    );
 
-    const yAxis = d3
-      .axisRight(y)
-      // would draw a line to the right of top and bottom of axis
-      .tickSizeOuter(0)
-      // creates the from the tick label to the y axis
-      .tickPadding(tickPaddingAndSize)
-      .tickSizeInner(tickPaddingAndSize);
-
-    const gy = plot
+    const yearBackgrounds = plot
       .append('g')
-      .attr('id', 'y-axis')
-      .attr('class', 'axis')
-      .call(yAxis)
-      .attr('aria-hidden', 'true')
-      .call((g) => {
-        return g.selectAll('.tick text').call(halo);
-      });
+      .attr('class', 'year-backgrounds')
+      .selectAll('circle')
+      .data(yearsToMark)
+      .join('circle')
+      // .attr(
+      //   'transform',
+      //   ({ date }) => `translate(${containerWidth / 2}, ${y(date)})`
+      // )
+      .attr('cx', containerWidth / 2)
+      .attr('cy', ({ date }) => y(date))
+      .attr('r', 15);
+
+    const years = plot
+      .append('g')
+      .attr('class', 'years')
+      .selectAll('text')
+      .data(yearsToMark)
+      .join('text')
+      .text(({ year }) => year)
+      // .attr('x', containerWidth / 2)
+      // .attr('y', ({ date }) => y(date))
+      .attr('y', '0.32em')
+      .attr(
+        'transform',
+        (d) => `translate(${containerWidth / 2}, ${y(d.date)})`
+      )
+      .attr('text-anchor', 'middle')
+      .attr('line-anchor', 'middle');
 
     const markers = plot
       .append('g')
@@ -140,18 +141,16 @@ function timeline() {
       .selectAll('circle')
       .data(eventData)
       .join('circle')
-      .attr('transform', (d) => `translate(0, ${y(d.date)})`)
+      .attr(
+        'transform',
+        (d) => `translate(${containerWidth / 2}, ${y(d.date)})`
+      )
       .attr('aria-hidden', 'true')
-      .attr('fill', (d) => (d.isWar ? markerWarColor : markerDefaultColor))
-      .attr('stroke', (d) => (d.isWar ? markerWarColor : markerDefaultColor))
+      .attr('fill', (d) => (d.isWar ? marker.warColor : marker.defaultColor))
+      .attr('stroke', (d) => (d.isWar ? marker.warColor : marker.defaultColor))
       .attr('cx', 0.5)
       .attr('cy', marker.radius / 2 + 0.5)
       .attr('r', marker.radius);
-
-    const dodgedYValues = dodge(
-      eventData.map((d) => y(d.date)),
-      16
-    );
 
     const eventLabels = plot
       .append('g')
@@ -162,14 +161,11 @@ function timeline() {
       .attr('class', 'event-title')
       .style('font-weight', '400')
       .style('fill', ([d]) => (d.isWar ? labelWarColor : labelDefaultColor))
-      .attr(
-        'x',
-        width >= spacingConfig.smallScreenSize
-          ? spaceBetweenMarkerAndEventName
-          : spaceBetweenMarkerAndEventNameSmallScreen
-      )
+      .attr('x', containerWidth / 2)
       .attr('y', ([, y]) => y)
-      .attr('dy', '0.35em');
+      .attr('dy', '0.5em')
+      .attr('text-anchor', (d, i) => (i % 2 === 0 ? 'start' : 'end'))
+      .attr('dx', (d, i) => (i % 2 === 0 ? 20 : -20));
 
     eventLabels.append('tspan').text(([d]) => d.eventName);
 
@@ -193,14 +189,16 @@ function timeline() {
 
     svg.on('touchend mouseout', function (event) {
       markers
-        .attr('fill', (d) => (d.isWar ? markerWarColor : markerDefaultColor))
-        .attr('stroke', (d) => (d.isWar ? markerWarColor : markerDefaultColor));
+        .attr('fill', (d) => (d.isWar ? marker.warColor : marker.defaultColor))
+        .attr('stroke', (d) =>
+          d.isWar ? marker.warColor : marker.defaultColor
+        );
 
       eventLabels.style('opacity', 1);
     });
 
     svg.on('touchmove mousemove', function (event) {
-      const mouseY = d3.pointer(event, this)[1];
+      const [mouseX, mouseY] = d3.pointer(event, this);
       const nearestEventY = rangeY.reduce((a, b) =>
         Math.abs(b - mouseY) < Math.abs(a - mouseY) ? b : a
       );
@@ -219,14 +217,16 @@ function timeline() {
 
         markers
           .filter((d, i) => i !== dodgedIndex)
-          .attr('fill', markerFadedColor)
-          .attr('stroke', markerFadedColor);
+          .attr('fill', marker.fadedColor)
+          .attr('stroke', marker.fadedColor);
 
         markers
           .filter((d, i) => i === dodgedIndex)
-          .attr('fill', (d) => (d.isWar ? markerWarColor : markerDefaultColor))
+          .attr('fill', (d) =>
+            d.isWar ? marker.warColor : marker.defaultColor
+          )
           .attr('stroke', (d) =>
-            d.isWar ? markerWarColor : markerDefaultColor
+            d.isWar ? marker.warColor : marker.defaultColor
           )
           .raise();
 
@@ -251,17 +251,17 @@ function timeline() {
 
         tooltip.style(
           'transform',
-          `translate(${
-            width >= spacingConfig.smallScreenSize ? plotArea.x + 8 : 0
-          }px, ${translationYOffset}px)`
+          `translate(${mouseX + 8}px, ${translationYOffset}px)`
         );
 
         tooltip.style('opacity', 1);
       } else {
         markers
-          .attr('fill', (d) => (d.isWar ? markerWarColor : markerDefaultColor))
+          .attr('fill', (d) =>
+            d.isWar ? marker.warColor : marker.defaultColor
+          )
           .attr('stroke', (d) =>
-            d.isWar ? markerWarColor : markerDefaultColor
+            d.isWar ? marker.warColor : marker.defaultColor
           );
 
         eventLabels.style('opacity', 1);
@@ -271,129 +271,33 @@ function timeline() {
     });
 
     svg.on('touchend mouseleave', () => tooltip.style('opacity', 0));
+
+    // call resize
+    d3.select(window).on('resize', function () {
+      const newContainerWidth = parseInt(d3.select(selector).style('width'));
+      const half = newContainerWidth / 2;
+      const plotSelection = d3.select('#plot');
+
+      plotSelection
+        .selectAll('.year-backgrounds')
+        .selectAll('circle')
+        .attr('cx', half);
+
+      plotSelection
+        .selectAll('.years')
+        .selectAll('text')
+        .attr('transform', (d) => `translate(${half}, ${y(d.date)})`);
+
+      plotSelection
+        .selectAll('.markers')
+        .selectAll('circle')
+        .attr('transform', (d) => `translate(${half}, ${y(d.date)})`);
+
+      plotSelection.selectAll('.event-title').attr('x', half);
+    });
   }
 
-  function halo(text) {
-    const backgroundColor = '#FAF9FB';
-
-    text
-      .clone(true)
-      .each(function () {
-        this.parentNode.insertBefore(this, this.previousSibling);
-      })
-      .attr('aria-hidden', 'true')
-      .attr('fill', 'none')
-      .attr('stroke', backgroundColor)
-      .attr('stroke-width', 24)
-      .attr('stroke-linecap', 'round')
-      .attr('stroke-linejoin', 'round')
-      .style(
-        'text-shadow',
-        `-1px -1px 2px ${backgroundColor}, 1px 1px 2px ${backgroundColor}, -1px 1px 2px ${backgroundColor}, 1px -1px 2px ${backgroundColor}`
-      );
-  }
-
-  // The dodge function takes an array of positions (e.g. X values along an X Axis) in floating point numbers
-  // The dodge function optionally takes customisable separation, iteration, and error values.
-  // The dodge function returns a similar array of positions, but slightly dodged from where they were in an attempt to separate them out. It restrains the result a little bit so that the elements don't explode all over the place and so they don't go out of bounds.
-  function dodge(positions, separation = 100, maxiter = 10, maxerror = 1e-1) {
-    // TODO: remove
-    positions = Array.from(positions);
-
-    let n = positions.length;
-
-    // isFinite is a JS global
-    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/isFinite
-    if (!positions.every(isFinite)) {
-      throw new Error('invalid position');
-    }
-
-    if (!(n > 1)) {
-      return positions;
-    }
-
-    let index = d3.range(positions.length);
-    for (let iter = 0; iter < maxiter; ++iter) {
-      index.sort((i, j) => d3.ascending(positions[i], positions[j]));
-
-      let error = 0;
-      for (let i = 1; i < n; ++i) {
-        let delta = positions[index[i]] - positions[index[i - 1]];
-
-        if (delta < separation) {
-          delta = (separation - delta) / 2;
-          error = Math.max(error, delta);
-          positions[index[i - 1]] -= delta;
-          positions[index[i]] += delta;
-        }
-      }
-
-      if (error < maxerror) break;
-    }
-
-    return positions;
-  } // end dodge fn
-
-  function parseTime(date) {
-    // adjusting to 6AM instead of midnight aligns first of month circles with axis tick markers
-    return timeParser(`${date} 06:00AM`);
-  }
-
-  /**
-   * generateAnnotations uses the timespanData to create a secondary line to the
-   * right of the main timeline, referred to as an annotation. A line is drawn
-   * spanning two points with a label.
-   */
-  function generateAnnotations() {
-    const annotationDefaultColor = '#CADFF7';
-    const annotationPersonalColor = '#eedddd';
-    const annotationsLeftMargin = plotArea.x + 240 + 24;
-
-    const annotations = plot
-      .append('g')
-      .attr('class', 'annotations')
-      .selectAll('g')
-      .data(timespanData)
-      .join('g');
-
-    annotations
-      .append('line')
-      .attr('aria-hidden', 'true')
-      .attr('stroke', annotationDefaultColor)
-      .attr('stroke-width', 3)
-      .attr('x1', annotationsLeftMargin)
-      .attr('x2', annotationsLeftMargin)
-      .attr('y1', (d) => y(d.startDate))
-      .attr('y2', (d) => y(d.endDate));
-
-    annotations
-      .append('text')
-      .attr('x', annotationsLeftMargin + 24)
-      .attr('y', (d) => y(d.startDate))
-      .attr('dy', '0.7em')
-      .style('font-size', 16)
-      .style('font-weight', 600)
-      .text((d) => (width >= spacingConfig.mediumScreenSize ? d.name : ''));
-
-    annotations
-      .append('text')
-      .attr('x', annotationsLeftMargin + 24)
-      .attr('y', (d) => y(d.startDate))
-      .attr('dy', '2.0em')
-      .style('font-size', 16)
-      .style('font-weight', 400)
-      .text((d) =>
-        width >= spacingConfig.mediumScreenSize
-          ? d3.timeFormat('%e %b')(d.startDate) +
-            ' – ' +
-            d3.timeFormat('%e %b')(d.endDate)
-          : ''
-      );
-  }
-
-  return {
-    draw
-  };
+  return { draw };
 }
 
-export { timeline };
+export { twoSidedTimeline };
