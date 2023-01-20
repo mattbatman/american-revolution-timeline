@@ -249,9 +249,14 @@ function twoSidedTimeline() {
             ? nearestEventY + h1Height + 65
             : nearestEventY + h1Height - tooltipHeight;
 
+        const xOffset = getLeft({
+          event,
+          graphSelector: selector
+        });
+
         tooltip.style(
           'transform',
-          `translate(${mouseX + 8}px, ${translationYOffset}px)`
+          `translate(${xOffset}px, ${translationYOffset}px)`
         );
 
         tooltip.style('opacity', 1);
@@ -295,6 +300,26 @@ function twoSidedTimeline() {
 
       plotSelection.selectAll('.event-title').attr('x', half);
     });
+  }
+
+  function getLeft({ event }) {
+    if (
+      parseInt(
+        `${event.pageX + 0.5 * parseInt(d3.select(`.tooltip`).style('width'))}`
+      ) > parseInt(`${parseInt(d3.select('body').style('width'))}`)
+    ) {
+      return event.pageX - parseInt(d3.select(`.tooltip`).style('width'));
+    }
+
+    if (
+      parseInt(
+        `${event.pageX - 0.5 * parseInt(d3.select(`.tooltip`).style('width'))}`
+      ) < 0
+    ) {
+      return event.pageX;
+    }
+
+    return event.pageX - 0.5 * parseInt(d3.select(`.tooltip`).style('width'));
   }
 
   return { draw };
