@@ -1,5 +1,7 @@
 import * as d3 from 'd3';
 
+const smallScreen = 600;
+
 function twoSidedTimeline() {
   function draw({ eventData, yearsToMark, selector }) {
     const containerWidth = parseInt(d3.select(selector).style('width'));
@@ -18,6 +20,18 @@ function twoSidedTimeline() {
     const width = containerWidth - margin.left - margin.right;
 
     const height = containerHeight - margin.top - margin.bottom;
+
+    const getYearBackgroundX = (container) =>
+      container < smallScreen ? 20 : container / 2;
+
+    const getMarkersX = (container) =>
+      container < smallScreen ? 20 : container / 2;
+
+    const getYearX = (container) =>
+      container < smallScreen ? 20 : container / 2;
+
+    const getEventLabelsX = (container) =>
+      container < smallScreen ? 20 : container / 2;
 
     const plotArea = {
       x: margin.left,
@@ -38,47 +52,6 @@ function twoSidedTimeline() {
     const labelSelectedColor = '#5b1a1a';
     const labelFadedColor = '#eedddd';
     const labelWarColor = '#5b1a1a';
-
-    // The dodge function takes an array of positions (e.g. X values along an X Axis) in floating point numbers
-    // The dodge function optionally takes customisable separation, iteration, and error values.
-    // The dodge function returns a similar array of positions, but slightly dodged from where they were in an attempt to separate them out. It restrains the result a little bit so that the elements don't explode all over the place and so they don't go out of bounds.
-    function dodge(positions, separation = 100, maxiter = 10, maxerror = 1e-1) {
-      // TODO: remove
-      positions = Array.from(positions);
-
-      let n = positions.length;
-
-      // isFinite is a JS global
-      // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/isFinite
-      if (!positions.every(isFinite)) {
-        throw new Error('invalid position');
-      }
-
-      if (!(n > 1)) {
-        return positions;
-      }
-
-      let index = d3.range(positions.length);
-      for (let iter = 0; iter < maxiter; ++iter) {
-        index.sort((i, j) => d3.ascending(positions[i], positions[j]));
-
-        let error = 0;
-        for (let i = 1; i < n; ++i) {
-          let delta = positions[index[i]] - positions[index[i - 1]];
-
-          if (delta < separation) {
-            delta = (separation - delta) / 2;
-            error = Math.max(error, delta);
-            positions[index[i - 1]] -= delta;
-            positions[index[i]] += delta;
-          }
-        }
-
-        if (error < maxerror) break;
-      }
-
-      return positions;
-    } // end dodge fn
 
     // create the skeleton of the chart
     const svg = d3
@@ -110,11 +83,7 @@ function twoSidedTimeline() {
       .selectAll('circle')
       .data(yearsToMark)
       .join('circle')
-      // .attr(
-      //   'transform',
-      //   ({ date }) => `translate(${containerWidth / 2}, ${y(date)})`
-      // )
-      .attr('cx', containerWidth / 2)
+      .attr('cx', () => getYearBackgroundX(containerWidth))
       .attr('cy', ({ date }) => y(date))
       .attr('r', 15);
 
@@ -125,12 +94,10 @@ function twoSidedTimeline() {
       .data(yearsToMark)
       .join('text')
       .text(({ year }) => year)
-      // .attr('x', containerWidth / 2)
-      // .attr('y', ({ date }) => y(date))
       .attr('y', '0.32em')
       .attr(
         'transform',
-        (d) => `translate(${containerWidth / 2}, ${y(d.date)})`
+        (d) => `translate(${getYearX(containerWidth)}, ${y(d.date)})`
       )
       .attr('text-anchor', 'middle')
       .attr('line-anchor', 'middle');
@@ -143,7 +110,7 @@ function twoSidedTimeline() {
       .join('circle')
       .attr(
         'transform',
-        (d) => `translate(${containerWidth / 2}, ${y(d.date)})`
+        (d) => `translate(${getMarkersX(containerWidth)}, ${y(d.date)})`
       )
       .attr('aria-hidden', 'true')
       .attr('fill', (d) => (d.isWar ? marker.warColor : marker.defaultColor))
@@ -161,11 +128,11 @@ function twoSidedTimeline() {
       .attr('class', 'event-title')
       .style('font-weight', '400')
       .style('fill', ([d]) => (d.isWar ? labelWarColor : labelDefaultColor))
-      .attr('x', containerWidth / 2)
+      .attr('x', () => getEventLabelsX(containerWidth))
       .attr('y', ([, y]) => y)
       .attr('dy', '0.5em')
-      .attr('text-anchor', (d, i) => (i % 2 === 0 ? 'start' : 'end'))
-      .attr('dx', (d, i) => (i % 2 === 0 ? 20 : -20));
+      .attr('text-anchor', (d, i) => labelTextAnchor({ containerWidth, d, i }))
+      .attr('dx', (d, i) => labelDx({ containerWidth, d, i }));
 
     eventLabels.append('tspan').text(([d]) => d.eventName);
 
@@ -280,25 +247,38 @@ function twoSidedTimeline() {
     // call resize
     d3.select(window).on('resize', function () {
       const newContainerWidth = parseInt(d3.select(selector).style('width'));
-      const half = newContainerWidth / 2;
       const plotSelection = d3.select('#plot');
 
       plotSelection
         .selectAll('.year-backgrounds')
         .selectAll('circle')
-        .attr('cx', half);
+        .attr('cx', () => getYearBackgroundX(newContainerWidth));
 
       plotSelection
         .selectAll('.years')
         .selectAll('text')
-        .attr('transform', (d) => `translate(${half}, ${y(d.date)})`);
+        .attr(
+          'transform',
+          (d) => `translate(${getYearX(newContainerWidth)}, ${y(d.date)})`
+        );
 
       plotSelection
         .selectAll('.markers')
         .selectAll('circle')
-        .attr('transform', (d) => `translate(${half}, ${y(d.date)})`);
+        .attr(
+          'transform',
+          (d) => `translate(${getMarkersX(newContainerWidth)}, ${y(d.date)})`
+        );
 
-      plotSelection.selectAll('.event-title').attr('x', half);
+      plotSelection
+        .selectAll('.event-title')
+        .attr('x', () => getEventLabelsX(newContainerWidth))
+        .attr('text-anchor', (d, i) =>
+          labelTextAnchor({ containerWidth: newContainerWidth, d, i })
+        )
+        .attr('dx', (d, i) =>
+          labelDx({ containerWidth: newContainerWidth, d, i })
+        );
     });
   }
 
@@ -320,6 +300,63 @@ function twoSidedTimeline() {
     }
 
     return event.pageX - 0.5 * parseInt(d3.select(`.tooltip`).style('width'));
+  }
+
+  // The dodge function takes an array of positions (e.g. X values along an X Axis) in floating point numbers
+  // The dodge function optionally takes customisable separation, iteration, and error values.
+  // The dodge function returns a similar array of positions, but slightly dodged from where they were in an attempt to separate them out. It restrains the result a little bit so that the elements don't explode all over the place and so they don't go out of bounds.
+  function dodge(positions, separation = 100, maxiter = 10, maxerror = 1e-1) {
+    // TODO: remove
+    positions = Array.from(positions);
+
+    let n = positions.length;
+
+    // isFinite is a JS global
+    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/isFinite
+    if (!positions.every(isFinite)) {
+      throw new Error('invalid position');
+    }
+
+    if (!(n > 1)) {
+      return positions;
+    }
+
+    let index = d3.range(positions.length);
+    for (let iter = 0; iter < maxiter; ++iter) {
+      index.sort((i, j) => d3.ascending(positions[i], positions[j]));
+
+      let error = 0;
+      for (let i = 1; i < n; ++i) {
+        let delta = positions[index[i]] - positions[index[i - 1]];
+
+        if (delta < separation) {
+          delta = (separation - delta) / 2;
+          error = Math.max(error, delta);
+          positions[index[i - 1]] -= delta;
+          positions[index[i]] += delta;
+        }
+      }
+
+      if (error < maxerror) break;
+    }
+
+    return positions;
+  }
+
+  function labelTextAnchor({ containerWidth, d, i }) {
+    if (containerWidth < smallScreen) {
+      return 'start';
+    }
+
+    return i % 2 === 0 ? 'start' : 'end';
+  }
+
+  function labelDx({ containerWidth, d, i }) {
+    if (containerWidth < smallScreen) {
+      return 20;
+    }
+
+    return i % 2 === 0 ? 20 : -20;
   }
 
   return { draw };
